@@ -4,11 +4,10 @@ A full-stack take-home submission: a React Native (CLI, TypeScript) Android app
 with email/password authentication, task CRUD, and a Node.js + Express +
 MongoDB backend.
 
-```
 .
-├── backend/     Node.js + Express + TypeScript + MongoDB API
-└── mobile-app/  React Native CLI (TypeScript) Android app
-```
+├── backend/ Node.js + Express + TypeScript + MongoDB API
+└── mobile-app/ React Native CLI (TypeScript) Android app
+
 
 ## What's implemented
 
@@ -83,9 +82,27 @@ npx react-native run-android   # with an emulator running, or a device connected
 - Physical **Android device**: replace it with your computer's LAN IP, e.g.
   `http://192.168.1.20:5000/api` (device and computer must be on the same network).
 
-No native linking steps are required beyond `npm install` — every native
-dependency used here (`react-native-screens`, `async-storage`,
-`react-native-community/datetimepicker`) is autolinked by React Native CLI.
+### Windows-specific setup notes
+
+Two Windows-only fixes were required to get a clean build, both already
+reflected in this repo:
+
+1. **CMake version.** The Android Gradle Plugin's default bundled CMake
+   (3.22.1) ships with an older `ninja` that enforces Windows' legacy 260-character
+   path limit, which the New Architecture's autolinked C++ codegen (for
+   `react-native-screens`, `react-native-safe-area-context`, etc.) can exceed.
+   `mobile-app/android/app/build.gradle` pins `externalNativeBuild.cmake.version`
+   to **4.1.2** to fix this — install CMake 4.1.2 via Android Studio's
+   SDK Manager → SDK Tools → CMake (with "Show Package Details" checked) before
+   building.
+2. **Windows long path support.** Also enable it system-wide: in the Registry
+   Editor, set `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem\LongPathsEnabled`
+   to `1`.
+
+Also create `mobile-app/android/local.properties` (not committed, machine-specific)
+containing:
+sdk.dir=C:\Users\<you>\AppData\Local\Android\Sdk
+
 
 ## Design notes
 
@@ -99,26 +116,29 @@ gradient theme.
 
 ## Project structure (mobile-app/src)
 
-```
 src/
-├── api/          axios client + auth/task endpoints
-├── components/   AppButton, AppInput, TaskCard, PrioritySelector, EmptyState
-├── hooks/        typed Redux hooks
-├── navigation/   auth stack ↔ app stack switch, driven by auth state
-├── screens/      Login, Register, TaskList, TaskEditor (add/edit)
-├── store/        Redux Toolkit store + auth/tasks slices
-├── theme/        color and typography design tokens
-├── types/        shared TypeScript types
-└── utils/        date formatting + the urgency sorting algorithm
-```
+├── api/ axios client + auth/task endpoints
+├── components/ AppButton, AppInput, TaskCard, PrioritySelector, EmptyState
+├── hooks/ typed Redux hooks
+├── navigation/ auth stack ↔ app stack switch, driven by auth state
+├── screens/ Login, Register, TaskList, TaskEditor (add/edit)
+├── store/ Redux Toolkit store + auth/tasks slices
+├── theme/ color and typography design tokens
+├── types/ shared TypeScript types
+└── utils/ date formatting + the urgency sorting algorithm
 
-## Notes for the reviewer
 
-This was built and verified in an environment without an Android SDK/emulator
-available, so while every file has been type-checked (`tsc --noEmit`, both
-projects), linted, and the app's full render tree is covered by a passing
-Jest test (store + navigation + auth bootstrap all wired up), the APK itself
-was not compiled here — building it just requires the standard
-`npx react-native run-android` (or an Android Studio build) on a machine with
-the Android SDK installed. The backend was smoke-tested by booting the Express
-app and hitting `/api/health` directly.
+## Verification
+
+- Both projects type-check clean (`tsc --noEmit`)
+- Mobile app passes ESLint
+- Backend boots and responds correctly on `/api/health`
+- App built and tested end-to-end on a physical Android emulator (Pixel-class,
+  API 36): registration, login, logout, add/edit/delete/complete tasks, the
+  urgency sort, filters, and session persistence across app restarts were all
+  verified working, alongside live backend logs confirming real API calls
+  against MongoDB.
+
+## Author
+
+Darshan
