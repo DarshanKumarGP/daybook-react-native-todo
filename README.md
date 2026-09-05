@@ -4,9 +4,11 @@ A full-stack take-home submission: a React Native (CLI, TypeScript) Android app
 with email/password authentication, task CRUD, and a Node.js + Express +
 MongoDB backend.
 
+```
 .
-├── backend/ Node.js + Express + TypeScript + MongoDB API
-└── mobile-app/ React Native CLI (TypeScript) Android app
+├── backend/     Node.js + Express + TypeScript + MongoDB API
+└── mobile-app/  React Native CLI (TypeScript) Android app
+```
 
 
 ## What's implemented
@@ -116,16 +118,18 @@ gradient theme.
 
 ## Project structure (mobile-app/src)
 
+```
 src/
-├── api/ axios client + auth/task endpoints
-├── components/ AppButton, AppInput, TaskCard, PrioritySelector, EmptyState
-├── hooks/ typed Redux hooks
-├── navigation/ auth stack ↔ app stack switch, driven by auth state
-├── screens/ Login, Register, TaskList, TaskEditor (add/edit)
-├── store/ Redux Toolkit store + auth/tasks slices
-├── theme/ color and typography design tokens
-├── types/ shared TypeScript types
-└── utils/ date formatting + the urgency sorting algorithm
+├── api/          axios client + auth/task endpoints
+├── components/   AppButton, AppInput, TaskCard, PrioritySelector, EmptyState
+├── hooks/        typed Redux hooks
+├── navigation/   auth stack ↔ app stack switch, driven by auth state
+├── screens/      Login, Register, TaskList, TaskEditor (add/edit)
+├── store/        Redux Toolkit store + auth/tasks slices
+├── theme/        color and typography design tokens
+├── types/        shared TypeScript types
+└── utils/        date formatting + the urgency sorting algorithm
+```
 
 
 ## Verification
